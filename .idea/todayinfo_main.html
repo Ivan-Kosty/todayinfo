@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TI — Главная</title>
+    <!-- ПОДКЛЮЧАЕМ СТИЛИ -->
+    <link rel="stylesheet" href="todayinfo_style.css">
+</head>
+<body>
+<div class="header">
+    <button class="logo-btn" onclick="window.location.reload()">TI</button>
+    <div class="main-buttons">
+        <button class="style-btn" onclick="alert('Новости')">НОВОСТИ</button>
+        <button class="style-btn" onclick="alert('Погода')">ПОГОДА</button>
+        <button class="style-btn" onclick="alert('Курс')">КУРС</button>
+    </div>
+</div>
+
+<main>
+    <div class="grid-2x2">
+        <div class="cell">
+            <div class="weather-info" id="weather-info">
+                Загрузка погоды...
+            </div>
+        </div>
+        <div class="cell">
+            <div class="empty-state">📌 Резерв</div>
+        </div>
+        <div class="cell">
+            <div class="empty-state">📌 Резерв</div>
+        </div>
+        <div class="cell">
+            <div class="empty-state">📌 Резерв</div>
+        </div>
+    </div>
+</main>
+
+<script src="todayinfo_weather.js"></script>
+</body>
+</html>
