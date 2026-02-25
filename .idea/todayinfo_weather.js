@@ -1,20 +1,12 @@
-/**
- * Модуль погоды для TodayInfo
- * Использует Open-Meteo API и геолокацию
- */
-
-// ========== КОНФИГУРАЦИЯ ==========
 const CONFIG = {
-    GEO_TIMEOUT: 5000,        // Таймаут для геокодера (5 сек)
-    LOCATION_TIMEOUT: 10000,  // Таймаут для определения местоположения (10 сек)
-    UPDATE_INTERVAL: 600000,  // Интервал обновления (10 мин)
+    GEO_TIMEOUT: 5000,
+    LOCATION_TIMEOUT: 10000,
+    UPDATE_INTERVAL: 600000,
     WEATHER_API: 'https://api.open-meteo.com/v1/forecast',
     GEO_API: 'https://nominatim.openstreetmap.org/reverse'
 };
 
-// ========== СЛОВАРИ И КОНСТАНТЫ ==========
 const WEATHER_CODES = {
-    // Коды погоды WMO
     CLEAR_SKY: [0],
     MAINLY_CLEAR: [1],
     PARTLY_CLOUDY: [2],
@@ -32,7 +24,6 @@ const WEATHER_CODES = {
 };
 
 const WEATHER_ICONS = {
-    // Иконки для разных погодных условий (день/ночь)
     CLEAR_SKY: { day: '☀️', night: '🌙' },
     MAINLY_CLEAR: { day: '🌤️', night: '☁️🌙' },
     PARTLY_CLOUDY: '⛅',
@@ -50,14 +41,7 @@ const WEATHER_ICONS = {
     DEFAULT: { day: '☁️', night: '☁️🌙' }
 };
 
-// ========== УТИЛИТЫ ==========
 const WeatherUtils = {
-    /**
-     * Получить иконку погоды по коду
-     * @param {number} code - WMO код погоды
-     * @param {boolean} isDay - День или ночь
-     * @returns {string} Иконка
-     */
     getWeatherIcon(code, isDay) {
         if (WEATHER_CODES.CLEAR_SKY.includes(code)) {
             return isDay ? WEATHER_ICONS.CLEAR_SKY.day : WEATHER_ICONS.CLEAR_SKY.night;
@@ -67,25 +51,20 @@ const WeatherUtils = {
         }
         if (WEATHER_CODES.PARTLY_CLOUDY.includes(code)) return WEATHER_ICONS.PARTLY_CLOUDY;
         if (WEATHER_CODES.OVERCAST.includes(code)) return WEATHER_ICONS.OVERCAST;
-        if (WEATHER_CODES.FOG.some(c => WEATHER_CODES.FOG.includes(code))) return WEATHER_ICONS.FOG;
-        if (WEATHER_CODES.DRIZZLE.some(c => WEATHER_CODES.DRIZZLE.includes(code))) return WEATHER_ICONS.DRIZZLE;
-        if (WEATHER_CODES.FREEZING_DRIZZLE.some(c => WEATHER_CODES.FREEZING_DRIZZLE.includes(code))) return WEATHER_ICONS.FREEZING_DRIZZLE;
-        if (WEATHER_CODES.RAIN.some(c => WEATHER_CODES.RAIN.includes(code))) return WEATHER_ICONS.RAIN;
-        if (WEATHER_CODES.FREEZING_RAIN.some(c => WEATHER_CODES.FREEZING_RAIN.includes(code))) return WEATHER_ICONS.FREEZING_RAIN;
-        if (WEATHER_CODES.SNOW_FALL.some(c => WEATHER_CODES.SNOW_FALL.includes(code))) return WEATHER_ICONS.SNOW_FALL;
+        if (WEATHER_CODES.FOG.includes(code)) return WEATHER_ICONS.FOG;
+        if (WEATHER_CODES.DRIZZLE.includes(code)) return WEATHER_ICONS.DRIZZLE;
+        if (WEATHER_CODES.FREEZING_DRIZZLE.includes(code)) return WEATHER_ICONS.FREEZING_DRIZZLE;
+        if (WEATHER_CODES.RAIN.includes(code)) return WEATHER_ICONS.RAIN;
+        if (WEATHER_CODES.FREEZING_RAIN.includes(code)) return WEATHER_ICONS.FREEZING_RAIN;
+        if (WEATHER_CODES.SNOW_FALL.includes(code)) return WEATHER_ICONS.SNOW_FALL;
         if (WEATHER_CODES.SNOW_GRAINS.includes(code)) return WEATHER_ICONS.SNOW_GRAINS;
-        if (WEATHER_CODES.RAIN_SHOWERS.some(c => WEATHER_CODES.RAIN_SHOWERS.includes(code))) return WEATHER_ICONS.RAIN_SHOWERS;
-        if (WEATHER_CODES.SNOW_SHOWERS.some(c => WEATHER_CODES.SNOW_SHOWERS.includes(code))) return WEATHER_ICONS.SNOW_SHOWERS;
-        if (WEATHER_CODES.THUNDERSTORM.some(c => WEATHER_CODES.THUNDERSTORM.includes(code))) return WEATHER_ICONS.THUNDERSTORM;
+        if (WEATHER_CODES.RAIN_SHOWERS.includes(code)) return WEATHER_ICONS.RAIN_SHOWERS;
+        if (WEATHER_CODES.SNOW_SHOWERS.includes(code)) return WEATHER_ICONS.SNOW_SHOWERS;
+        if (WEATHER_CODES.THUNDERSTORM.includes(code)) return WEATHER_ICONS.THUNDERSTORM;
 
         return isDay ? WEATHER_ICONS.DEFAULT.day : WEATHER_ICONS.DEFAULT.night;
     },
 
-    /**
-     * Форматировать сообщение об ошибке
-     * @param {Error} error - Объект ошибки
-     * @returns {string} Отформатированное сообщение
-     */
     formatErrorMessage(error) {
         if (error.message.includes('геолокация') || error.code === 1) {
             return 'Доступ к геолокации запрещен';
@@ -105,10 +84,6 @@ const WeatherUtils = {
 
 // ========== API СЕРВИСЫ ==========
 const WeatherAPI = {
-    /**
-     * Получить текущие координаты
-     * @returns {Promise<{latitude: number, longitude: number}>}
-     */
     async getCurrentPosition() {
         if (!navigator.geolocation) {
             throw new Error('Геолокация не поддерживается вашим браузером');
@@ -123,12 +98,6 @@ const WeatherAPI = {
         });
     },
 
-    /**
-     * Получить название города по координатам
-     * @param {number} lat - Широта
-     * @param {number} lon - Долгота
-     * @returns {Promise<string>} Название города
-     */
     async getCityName(lat, lon) {
         try {
             const controller = new AbortController();
@@ -160,12 +129,6 @@ const WeatherAPI = {
         }
     },
 
-    /**
-     * Получить данные о погоде
-     * @param {number} lat - Широта
-     * @param {number} lon - Долгота
-     * @returns {Promise<Object>} Данные погоды
-     */
     async getWeatherData(lat, lon) {
         const url = new URL(CONFIG.WEATHER_API);
         url.searchParams.append('latitude', lat);
@@ -189,13 +152,7 @@ const WeatherAPI = {
     }
 };
 
-// ========== UI КОМПОНЕНТЫ ==========
 const WeatherUI = {
-    /**
-     * Обновить UI с данными погоды
-     * @param {HTMLElement} container - Контейнер
-     * @param {Object} data - Данные погоды
-     */
     renderWeather(container, { city, temp, icon }) {
         container.innerHTML = `
             <div class="weather-content">
@@ -207,11 +164,6 @@ const WeatherUI = {
         `;
     },
 
-    /**
-     * Показать ошибку
-     * @param {HTMLElement} container - Контейнер
-     * @param {string} message - Сообщение об ошибке
-     */
     renderError(container, message) {
         container.innerHTML = `
             <div class="weather-error">
@@ -222,11 +174,6 @@ const WeatherUI = {
         `;
     },
 
-    /**
-     * Экранирование HTML
-     * @param {string} text - Текст
-     * @returns {string} Безопасный текст
-     */
     escapeHTML(text) {
         const div = document.createElement('div');
         div.textContent = text;
@@ -234,16 +181,12 @@ const WeatherUI = {
     }
 };
 
-// ========== ОСНОВНАЯ ЛОГИКА ==========
 class WeatherWidget {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.isUpdating = false;
     }
 
-    /**
-     * Инициализация виджета
-     */
     async init() {
         if (!this.container) {
             console.error('❌ Элемент weather-info не найден');
@@ -254,9 +197,6 @@ class WeatherWidget {
         this.startAutoUpdate();
     }
 
-    /**
-     * Обновление данных
-     */
     async update() {
         if (this.isUpdating) return;
 
@@ -264,13 +204,11 @@ class WeatherWidget {
         console.log('🔄 Обновление погоды...');
 
         try {
-            // Получаем координаты
             const position = await WeatherAPI.getCurrentPosition();
             const { latitude, longitude } = position.coords;
 
             console.log(`📍 Координаты: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 
-            // Параллельно получаем город и погоду
             const [city, weatherData] = await Promise.all([
                 WeatherAPI.getCityName(latitude, longitude),
                 WeatherAPI.getWeatherData(latitude, longitude)
@@ -284,7 +222,6 @@ class WeatherWidget {
             console.log(`☁️ Погода: ${temp}°C, код: ${weatherCode}, день: ${isDay}`);
             console.log(`🏙️ Город: ${city}`);
 
-            // Обновляем UI
             WeatherUI.renderWeather(this.container, { city, temp, icon });
 
         } catch (error) {
@@ -296,9 +233,6 @@ class WeatherWidget {
         }
     }
 
-    /**
-     * Запуск автообновления
-     */
     startAutoUpdate() {
         setInterval(() => {
             this.update();
@@ -307,10 +241,7 @@ class WeatherWidget {
     }
 }
 
-// ========== ЗАПУСК ==========
-// Создаем и инициализируем виджет при загрузке страницы
 (function initWeatherWidget() {
-    // Ждем загрузки DOM
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             const widget = new WeatherWidget('weather-info');
@@ -321,6 +252,3 @@ class WeatherWidget {
         widget.init();
     }
 })();
-
-// Экспорт для использования в других модулях
-export { WeatherWidget, WeatherAPI, WeatherUtils };
