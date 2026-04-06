@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TI — Главная</title>
-    <link rel="stylesheet" href="todayinfo_style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="header">
     <button class="logo-btn" onclick="window.location.reload()">TI</button>
     <div class="main-buttons">
-        <button class="style-btn" onclick="alert('Курс')">КУРС</button>
+        <button class="style-btn" onclick="window.location.href='main_currency.html'">КУРС</button>
         <button class="style-btn" onclick="alert('Погода')">ПОГОДА</button>
         <button class="style-btn" onclick="alert('Новости')">НОВОСТИ</button>
     </div>
@@ -27,26 +27,34 @@
             </div>
         </div>
         <div class="cell">
-            <div class="empty-state">
-                <span class="empty-icon">📰</span>
-                <span class="empty-text">Новость 1</span>
+            <div class="news-info" id="news-info-1">
+                <div class="news-loading">
+                    <div class="loading-spinner-small"></div>
+                    <span>Загрузка новостей...</span>
+                </div>
             </div>
         </div>
         <div class="cell">
-            <div class="empty-state">
-                <span class="empty-icon">📈</span>
-                <span class="empty-text">Курс</span>
+            <div id="currency-info">
+                <div class="currency-loading">
+                    <div class="loading-spinner-small"></div>
+                    <span>Загрузка курсов...</span>
+                </div>
             </div>
         </div>
         <div class="cell">
-            <div class="empty-state">
-                <span class="empty-icon">📰</span>
-                <span class="empty-text">Новость 2</span>
+            <div class="news-info" id="news-info-2">
+                <div class="news-loading">
+                    <div class="loading-spinner-small"></div>
+                    <span>Загрузка новостей...</span>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
-<script src="todayinfo_weather.js"></script>
+<script src="weather.js"></script>
+<script src="rates.js"></script>
+<script src="news.js"></script>
 </body>
 </html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TI — Курс</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="header">
+    <button class="logo-btn" onclick="window.location.href='todayinfo_main.html'">TI</button>
+    <div class="main-buttons">
+        <button class="style-btn" onclick="window.location.href='todayinfo_main.html'">НАЗАД</button>
+    </div>
+</div>
+
+<main>
+    <div class="currency-page">
+        <h1 class="currency-page-title">Курсы валют</h1>
+        <div class="currency-page-content">
+            <div id="currency-rates"></div>
+            <div class="currency-converter">
+                <div class="converter-body">
+                    <div class="converter-row">
+                        <input type="number" id="from-value" value="1" min="0" step="any" placeholder="Введите сумму">
+                        <select id="from-currency">
+                            <option value="BYN" selected>BYN</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                    <div class="converter-equals">=</div>
+                    <div class="converter-row">
+                        <input type="text" id="to-value" readonly placeholder="Результат">
+                        <select id="to-currency">
+                            <option value="BYN">BYN</option>
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="rates.js"></script>
+<script>
+(function() {
+    var ratesData = null;
+
+    function getRateToBYN(currency) {
+        if (!ratesData) return 1;
+        if (currency === 'BYN') return 1;
+        if (currency === 'USD') return ratesData.USD ? 1 / ratesData.USD : null;
+        if (currency === 'EUR') return ratesData.EUR ? 1 / ratesData.EUR : null;
+        if (currency === 'RUB') return ratesData.RUB ? 1 / ratesData.RUB : null;
+        return null;
+    }
+
+    function formatResult(num) {
+        if (num === 0) return '0';
+        if (Math.abs(num) >= 1) {
+            return parseFloat(num.toFixed(4)).toString();
+        }
+        return parseFloat(num.toFixed(6)).toString();
+    }
+
+    function convert() {
+        var fromValue = document.getElementById('from-value');
+        var fromCurrency = document.getElementById('from-currency');
+        var toValue = document.getElementById('to-value');
+        var toCurrency = document.getElementById('to-currency');
+
+        if (!fromValue || !fromCurrency || !toValue || !toCurrency || !ratesData) return;
+
+        var amount = parseFloat(fromValue.value) || 0;
+        var from = fromCurrency.value;
+        var to = toCurrency.value;
+
+        var fromRate = getRateToBYN(from);
+        var toRate = getRateToBYN(to);
+
+        if (fromRate && toRate && toRate !== 0) {
+            var result = (amount * fromRate) / toRate;
+            toValue.value = formatResult(result);
+        } else {
+            toValue.value = '—';
+        }
+    }
+
+    function renderRates(data) {
+        ratesData = data.rates;
+
+        var container = document.getElementById('currency-rates');
+        if (!container) return;
+
+        var usdRate = ratesData.USD ? (1 / ratesData.USD).toFixed(2) : '—';
+        var eurRate = ratesData.EUR ? (1 / ratesData.EUR).toFixed(2) : '—';
+        var rubRate = ratesData.RUB ? ((1 / ratesData.RUB) * 100).toFixed(2) : '—';
+
+        var date = new Date();
+        var dateStr = date.toLocaleDateString('ru-RU');
+
+        container.innerHTML =
+            '<div class="rates-display">' +
+                '<div class="rates-row"><span class="rates-code">1 USD</span><span class="rates-val">' + usdRate + ' BYN</span></div>' +
+                '<div class="rates-row"><span class="rates-code">1 EUR</span><span class="rates-val">' + eurRate + ' BYN</span></div>' +
+                '<div class="rates-row"><span class="rates-code">100 RUB</span><span class="rates-val">' + rubRate + ' BYN</span></div>' +
+                '<div class="rates-date"><small>Обновлено: ' + dateStr + '</small></div>' +
+            '</div>';
+
+        convert();
+    }
+
+    function showError(msg) {
+        var container = document.getElementById('currency-rates');
+        if (container) {
+            container.innerHTML = '<div class="rates-error"><small>' + msg + '</small></div>';
+        }
+    }
+
+    CurrencyAPI.fetchRates().then(function(data) {
+        renderRates(data);
+    }).catch(function(err) {
+        showError('Не удалось загрузить курсы: ' + err.message);
+    });
+
+    document.getElementById('from-value').addEventListener('input', convert);
+    document.getElementById('from-currency').addEventListener('change', convert);
+    document.getElementById('to-currency').addEventListener('change', convert);
+})();
+</script>
+</body>
+</html>
