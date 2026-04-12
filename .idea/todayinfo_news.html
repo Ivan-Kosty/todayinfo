@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TI — Главная</title>
+    <title>TI — Новости</title>
     <link rel="stylesheet" href="styles.css">
     <script>
         (function(){try{var t=localStorage.getItem('ti-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();
@@ -11,10 +11,9 @@
 </head>
 <body>
 <div class="header">
-    <button class="logo-btn" onclick="window.location.reload()">TI</button>
+    <button class="logo-btn" onclick="window.location.href='todayinfo_main.html'">TI</button>
     <div class="main-buttons">
-        <button class="style-btn" onclick="window.location.href='todayinfo_weather.html'">ПОГОДА</button>
-        <button class="style-btn" onclick="window.location.href='todayinfo_news.html'">НОВОСТИ</button>
+        <button class="style-btn" onclick="window.location.href='todayinfo_main.html'">НАЗАД</button>
         <button class="theme-toggle" id="theme-toggle" aria-label="Сменить тему">
             <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"/>
@@ -35,37 +34,12 @@
 </div>
 
 <main>
-    <div class="grid-2x2">
-        <div class="cell">
-            <div class="weather-info" id="weather-info">
-                <div class="weather-loading">
-                    <div class="loading-spinner"></div>
-                    <span>Загрузка погоды...</span>
-                </div>
-            </div>
-        </div>
-        <div class="cell">
-            <div class="news-info" id="news-info-1">
-                <div class="news-loading">
-                    <div class="loading-spinner-small"></div>
-                    <span>Загрузка новостей...</span>
-                </div>
-            </div>
-        </div>
-        <div class="cell">
-            <div id="currency-info">
-                <div class="currency-loading">
-                    <div class="loading-spinner-small"></div>
-                    <span>Загрузка курсов...</span>
-                </div>
-            </div>
-        </div>
-        <div class="cell">
-            <div class="news-info" id="news-info-2">
-                <div class="news-loading">
-                    <div class="loading-spinner-small"></div>
-                    <span>Загрузка новостей...</span>
-                </div>
+    <div class="news-feed-page">
+        <h1 class="news-feed-title">Новости</h1>
+        <div class="news-feed-list" id="news-feed-list">
+            <div class="news-feed-loading">
+                <div class="loading-spinner"></div>
+                <span>Загрузка новостей...</span>
             </div>
         </div>
     </div>
@@ -79,8 +53,6 @@
 </footer>
 
 <script src="theme.js"></script>
-<script src="weather.js"></script>
-<script src="rates.js"></script>
-<script src="news.js"></script>
+<script src="news-feed.js"></script>
 </body>
 </html>
