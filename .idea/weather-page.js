@@ -1,7 +1,6 @@
 (function() {
     var LAYER_URLS = {
         radar: 'https://embed.windy.com/embed2.html?lat=53.9&lon=27.57&detailLat=53.9&detailLon=27.57&width=650&height=450&zoom=6&level=surface&overlay=radar&product=radar&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&metricWindDefault=kt&temp=none&detail=true',
-        clouds: 'https://embed.windy.com/embed2.html?lat=53.9&lon=27.57&detailLat=53.9&detailLon=27.57&width=650&height=450&zoom=6&level=surface&overlay=clouds&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&metricWindDefault=kt&temp=none&detail=true',
         temp: 'https://embed.windy.com/embed2.html?lat=53.9&lon=27.57&detailLat=53.9&detailLon=27.57&width=650&height=450&zoom=6&level=surface&overlay=temp&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&metricWindDefault=kt&temp=none&detail=true',
         wind: 'https://embed.windy.com/embed2.html?lat=53.9&lon=27.57&detailLat=53.9&detailLon=27.57&width=650&height=450&zoom=6&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&metricWindDefault=kt&temp=none&detail=true'
     };
@@ -19,14 +18,12 @@
         iframe.src = url;
     }
 
-    // Переключение слоёв
     var layerButtons = document.querySelectorAll('.layer-btn');
     layerButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
             layerButtons.forEach(function(b) { b.classList.remove('active'); });
             btn.classList.add('active');
             updateMapLayer(btn.getAttribute('data-layer'));
-            // Обновляем и полноэкранный iframe если открыт
             var fullscreenIframe = document.getElementById('weather-map-fullscreen');
             if (fullscreenIframe && fullscreenIframe.src) {
                 fullscreenIframe.src = LAYER_URLS[btn.getAttribute('data-layer')];
@@ -34,7 +31,6 @@
         });
     });
 
-    // Полноэкранный режим карты
     var expandBtn = document.getElementById('weather-map-expand-btn');
     var closeBtn = document.getElementById('weather-map-close-btn');
     var overlay = document.getElementById('weather-map-fullscreen-overlay');
@@ -57,7 +53,6 @@
         });
     }
 
-    // Закрытие по Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && overlay.classList.contains('active')) {
             overlay.classList.remove('active');
@@ -66,7 +61,6 @@
         }
     });
 
-    // Инициализация
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
