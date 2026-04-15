@@ -82,7 +82,6 @@ const WeatherUtils = {
     }
 };
 
-// ========== API СЕРВИСЫ ==========
 const WeatherAPI = {
     async getCurrentPosition() {
         if (!navigator.geolocation) {
