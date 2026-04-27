@@ -236,7 +236,7 @@ class WeatherWidget {
         setInterval(() => {
             this.update();
         }, CONFIG.UPDATE_INTERVAL);
-        console.log(`⏰ Автообновление каждые ${CONFIG.UPDATE_INTERVAL / 60000} минут`);
+        console.log(`Автообновление каждые ${CONFIG.UPDATE_INTERVAL / 60000} минут`);
     }
 }
 
